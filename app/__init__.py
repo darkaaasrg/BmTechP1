@@ -1,15 +1,15 @@
-from flask import Flask
-from config import Config
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_login import LoginManager
 import logging
-from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
+from logging.handlers import SMTPHandler, RotatingFileHandler
 
+from flask import Flask
+from flask_login import LoginManager
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+
+from config import Config
 
 app = Flask(__name__)
-login = LoginManager(app)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -29,7 +29,9 @@ if not app.debug:
             fromaddr='no-reply@' + app.config['MAIL_SERVER'],
             toaddrs=app.config['ADMINS'],
             subject='Microblog Failure',
-            credentials=auth, secure=secure)
+            credentials=auth,
+            secure=secure
+        )
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
         if not os.path.exists('logs'):
@@ -46,6 +48,6 @@ if not app.debug:
         app.logger.info('Microblog startup')
 
 
-from app import routes, models, errors
+from app import errors, models, routes
 
 
