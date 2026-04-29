@@ -14,3 +14,6 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['kisildarina09@gmail.com']
+    LOG_FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+    LOG_MAX_BYTES = 10240
+    LOG_BACKUP_COUNT = 10
