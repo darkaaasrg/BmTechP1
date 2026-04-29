@@ -17,3 +17,4 @@ class Config:
     LOG_FORMAT = '%(asctime)s %(levelname)s: %(message)s'
     LOG_MAX_BYTES = 10240
     LOG_BACKUP_COUNT = 10
+    LOG_LEVEL = 'INGO'

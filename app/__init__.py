@@ -43,6 +43,8 @@ if not app.debug:
         )
 
         file_handler.setFormatter(logging.Formatter(app.config['LOG_FORMAT']))
+        file_handler.setLevel(app.config['LOG_LEVEL'])
+        app.logger.addHandler(file_handler)
 
 
 from app import errors, models, routes
