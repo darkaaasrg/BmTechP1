@@ -37,15 +37,12 @@ if not app.debug:
         if not os.path.exists('logs'):
             os.mkdir('logs')
         file_handler = RotatingFileHandler(
-            'logs/microblog.log', maxBytes=10240, backupCount=10
+            'logs/microblog.log',
+            maxBytes=app.config['LOG_MAX_BYTES'],
+            backupCount=app.config['LOG_BACKUP_COUNT']
         )
-        file_handler.setFormatter(logging.Formatter(
-            '%(asctime)s %(levelname)s: %(message)s'))
-        file_handler.setLevel(logging.INFO)
-        app.logger.addHandler(file_handler)
 
-        app.logger.setLevel(logging.INFO)
-        app.logger.info('Microblog startup')
+        file_handler.setFormatter(logging.Formatter(app.config['LOG_FORMAT']))
 
 
 from app import errors, models, routes
