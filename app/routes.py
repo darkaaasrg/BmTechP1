@@ -1,13 +1,13 @@
 from datetime import datetime, timezone
 from urllib.parse import urlsplit
 
-from flask import render_template, flash, redirect, url_for, request
-from flask_login import current_user, login_user, login_required
-from app import app,db
-from app.forms import LoginForm, RegisterForm, EditProfileForm
-from app.models import User
 import sqlalchemy as sa
-from flask_login import logout_user
+from flask import flash, render_template, redirect, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+
+from app import app, db
+from app.forms import EditProfileForm, LoginForm, RegisterForm
+from app.models import User
 
 @app.route('/')
 @app.route('/index')
@@ -28,7 +28,6 @@ def index():
     return render_template('index.html', title='Home', user=id(User), posts=posts)
 
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -47,6 +46,7 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
+
 @app.route('/logout')
 def logout():
     logout_user()
@@ -59,7 +59,7 @@ def register():
         return redirect(url_for('index'))
     form = RegisterForm()
     if form.validate_on_submit():
-        user = User(username = form.username.data, email = form.email.data)
+        user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -85,6 +85,7 @@ def before_request():
         current_user.last_seen = datetime.now(timezone.utc)
         db.session.commit()
 
+
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -98,4 +99,4 @@ def edit_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return  render_template('edit_profile.html', title='Edit Profile', form=form)
+    return render_template('edit_profile.html', title='Edit Profile', form=form)
