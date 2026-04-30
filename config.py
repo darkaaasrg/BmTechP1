@@ -18,3 +18,4 @@ class Config:
     LOG_MAX_BYTES = 10240
     LOG_BACKUP_COUNT = 10
     LOG_LEVEL = 'INFO'
+    POSTS_PER_PAGE = 25
