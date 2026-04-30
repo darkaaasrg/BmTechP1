@@ -1,2 +1,6 @@
 app.db
 logs/
+
+```text
+    __pycache__/
+ *.pyc
