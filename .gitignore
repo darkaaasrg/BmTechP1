@@ -4,3 +4,4 @@ logs/
 ```text
     __pycache__/
  *.pyc
+.env*
