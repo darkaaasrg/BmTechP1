@@ -19,3 +19,4 @@ class Config:
     LOG_BACKUP_COUNT = 10
     LOG_LEVEL = 'INFO'
     POSTS_PER_PAGE = 4
+    LANGUAGES = ['en', 'uk']
