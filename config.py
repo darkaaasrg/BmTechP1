@@ -19,4 +19,5 @@ class Config:
     LOG_BACKUP_COUNT = 10
     LOG_LEVEL = 'INFO'
     POSTS_PER_PAGE = 4
+    MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
     LANGUAGES = ['en', 'uk']
