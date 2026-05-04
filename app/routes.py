@@ -1,24 +1,32 @@
 from datetime import datetime, timezone
 from urllib.parse import urlsplit
 
+
 import sqlalchemy as sa
 from flask import flash, render_template, redirect, request, url_for, g
-from flask_babel import get_locale
+from flask_babel import get_locale, _
 from flask_login import current_user, login_required, login_user, logout_user
+from langdetect import detect, LangDetectException
 
 from app import app, db
 from app.forms import EditProfileForm, EmptyForm, LoginForm, RegisterForm, ResetPasswordRequestForm, ResetPasswordForm, PostForm
 from app.app_email import send_password_reset_email
 from app.models import User, Post
+from app.translate import translate
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body=form.post.data, author=current_user)
+        try:
+            language = detect(form.post.data)
+        except LangDetectException:
+            language = ''
+        post = Post(body=form.post.data, author=current_user,
+                    language=language)
         db.session.add(post)
         db.session.commit()
         flash('Your post is now live')
@@ -98,7 +106,7 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.now(timezone.utc)
         db.session.commit()
-        g.locale = str(get_locale())
+    g.locale = str(get_locale())
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -146,14 +154,14 @@ def unfollow(username):
         user = db.session.scalar(
             sa.select(User).where(User.username == username))
         if user is None:
-            flash(f'User {username} not found.')
+            flash(_('User %(username)s not found.', username=username))
             return redirect(url_for('index'))
         if user == current_user:
-            flash('You cannot unfollow yourself!')
+            flash(_('You cannot unfollow yourself!'))
             return redirect(url_for('user', username=username))
         current_user.unfollow(user)
         db.session.commit()
-        flash(f'You are not following {username}.')
+        flash(_('You are not following %(username)s.', username=username))
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
@@ -205,3 +213,12 @@ def reset_password_request():
         return redirect(url_for('login'))
     return render_template('reset_password_request.html',
                            title='Reset Password', form=form)
+
+
+@app.route('/translate', methods=['POST'])
+@login_required
+def translate_text():
+    data = request.get_json()
+    return {'text': translate(data['text'],
+                              data['source_language'],
+                              data['dest_language'])}

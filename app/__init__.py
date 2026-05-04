@@ -2,7 +2,7 @@ import logging
 import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
 
-from flask import Flask, request
+from flask import Flask, request, has_request_context
 from flask_babel import Babel
 from flask_login import LoginManager
 from flask_mail import Mail
@@ -13,8 +13,9 @@ from flask_sqlalchemy import SQLAlchemy
 from config import Config
 
 def get_locale():
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
-    # return 'uk'
+    if has_request_context():
+        return request.accept_languages.best_match(app.config['LANGUAGES'])
+    return 'en'
 
 app = Flask(__name__)
 app.config.from_object(Config)
