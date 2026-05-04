@@ -1,17 +1,21 @@
 import os
-os.environ['DATABASE_URL'] = 'sqlite://'
 
 import unittest
 from datetime import datetime, timezone, timedelta
 
-from app import app, db # noqa
+from app import create_app, db # noqa
 from app.models import User, Post # noqa
+from config import Config
 
 
+class TestConfig(Config):
+    TESTING = True
+    os.environ['DATABASE_URL'] = 'sqlite://'
 
 class UserModelCase(unittest.TestCase):
     def setUp(self):
-        self.app_context = app.app_context()
+        self.app = create_app(TestConfig)
+        self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
 
