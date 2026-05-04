@@ -2,7 +2,8 @@ import logging
 import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
 
-from flask import Flask
+from flask import Flask, request
+from flask_babel import Babel
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -11,8 +12,13 @@ from flask_sqlalchemy import SQLAlchemy
 
 from config import Config
 
+def get_locale():
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    # return 'uk'
+
 app = Flask(__name__)
 app.config.from_object(Config)
+babel = Babel(app, locale_selector=get_locale)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
