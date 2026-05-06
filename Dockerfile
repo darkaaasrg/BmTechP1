@@ -1,5 +1,6 @@
 FROM python:slim
 
+RUN apt-get update && apt-get install -y default-libmysqlclient-dev build-essential pkg-config && rm -rf /var/lib/apt/lists/*
 WORKDIR /home/microblog
 
 COPY requirements.txt requirements.txt
@@ -16,4 +17,3 @@ RUN flask translate compile
 
 EXPOSE 5000
 ENTRYPOINT ["./boot.sh"]
-
