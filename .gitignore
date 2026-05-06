@@ -1,7 +1,13 @@
 app.db
 logs/
-
  __pycache__/
  *.pyc
 .env*
 *.mo
+venv/
+certs/
+instance/
+.vagrant/
+Vagrantfile
+*.pem
+private_key

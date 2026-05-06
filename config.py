@@ -23,3 +23,4 @@ class Config:
     MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
     LANGUAGES = ['en', 'uk']
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+    # 'http://localhost:9200'
