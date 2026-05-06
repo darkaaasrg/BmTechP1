@@ -1,4 +1,3 @@
-from idlelib.searchengine import SearchEngine
 from time import time
 from typing import Optional
 from datetime import datetime, timezone
