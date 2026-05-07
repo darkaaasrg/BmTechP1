@@ -8,7 +8,7 @@ services:
     environment:
       MYSQL_DATABASE: microblog
       MYSQL_USER: microblog
-      MYSQL_PASSWORD: 5f21da356da74789867fbd7cddee4e8b
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     networks:
       - microblog-network
@@ -21,8 +21,8 @@ services:
       - "8080:5000"
     environment:
       - SECRET_KEY=my-secret-key
-      - MS_TRANSLATOR_KEY=8mAFzgfqZkIPYJhPnZ6cNYf6Cu4ausMaTDPH4lnmji5IuwvEqFyBJQQJ99CEAC5RqLJXJ3w3AAAbACOGU812
-      - DATABASE_URL=mysql+pymysql://microblog:5f21da356da74789867fbd7cddee4e8b@db/microblog
+      - MS_TRANSLATOR_KEY=${MS_TRANSLATOR_KEY}
+      - DATABASE_URL=mysql+pymysql://microblog:${MYSQL_PASSWORD}@db/microblog
     depends_on:
       - db
     networks:
