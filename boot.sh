@@ -1,16 +1,11 @@
-#!/bin/bash
-# Чекаємо, поки MySQL стане доступним
+#!/bin/sh
+source venv/bin/activate
 while true; do
     flask db upgrade
-    if [[ "$?" == "0" ]]; then
+    if [ "$?" = "0" ]; then
         break
     fi
-    echo "База ще не готова, чекаємо 5 секунд..."
+    echo Upgrade command failed, retrying in 5 secs...
     sleep 5
 done
-
-exec gunicorn -b :5000 --access-logfile - --error-logfile - microblog:app
-
-chmod a+x /vagrant/boot.sh
-
-
+exec gunicorn -b 0.0.0.0:5000 --access-logfile - --error-logfile - microblog:app
