@@ -11,3 +11,5 @@ instance/
 Vagrantfile
 *.pem
 private_key
+.venv/
+venv_linux/
