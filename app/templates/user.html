@@ -30,6 +30,9 @@
                 {{ form.submit(value='Unfollow', class='btn btn-outline-secondary btn-sm') }}
             </form>
             {% endif %}
+            {% if user != current_user %}
+            <p><a href="{{ url_for('main.send_message', recipient=user.username) }}">{{ _('Send private message') }}</a></p>
+            {% endif %}
         </div>
     </div>
 </div>
