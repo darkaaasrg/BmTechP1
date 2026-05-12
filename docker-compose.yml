@@ -13,6 +13,12 @@ services:
     networks:
       - microblog-network
 
+  redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - microblog-network
+
   web:
     build: .
     container_name: microblog
@@ -23,8 +29,26 @@ services:
       - SECRET_KEY=my-secret-key
       - MS_TRANSLATOR_KEY=${MS_TRANSLATOR_KEY}
       - DATABASE_URL=mysql+pymysql://microblog:${MYSQL_PASSWORD}@db/microblog
+      - REDIS_URL=redis://redis:6379/0
     depends_on:
       - db
+      - redis
+    networks:
+      - microblog-network
+
+  worker:
+    build: .
+    image: bmtechp1_web:latest
+    restart: always
+    environment:
+      - SECRET_KEY=my-secret-key
+      - DATABASE_URL=mysql+pymysql://microblog:${MYSQL_PASSWORD}@db/microblog
+      - REDIS_URL=redis://redis:6379/0
+      - PYTHONUNBUFFERED=1
+    command: python3 -m rq worker -u redis://redis:6379/0 microblog-tasks
+    depends_on:
+      - db
+      - redis
     networks:
       - microblog-network
 
